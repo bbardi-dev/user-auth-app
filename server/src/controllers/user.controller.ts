@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { CreateUserInput } from "../schema/user.schema";
-import { createUser } from "../services/user.service";
+import { CreateUserInput, VerifyUserInput } from "../schema/user.schema";
+import { createUser, findUserById } from "../services/user.service";
 import sendEmail from "../utils/mailer";
 
 //last layer that interacts with the client, after all checking is done calls the service that interacts with DB
@@ -24,4 +24,26 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
 
     return res.status(500).send(e);
   }
+}
+
+//
+export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Response) {
+  const id = req.params.id;
+  const verificationCode = req.params.verificationCode;
+
+  //find user by ID
+  const user = await findUserById(id);
+
+  if (!user) return res.send("Could not find user");
+  //check to see if already verified
+  if (user.verified) return res.send("User already verified");
+
+  //check to see if verificationCode matches/is correct
+  if (user.verificationCode === verificationCode) {
+    user.verified = true;
+    await user.save();
+    return res.send("User successfully verified");
+  }
+
+  return res.send("Could not verify user");
 }

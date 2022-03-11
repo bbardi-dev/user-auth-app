@@ -28,3 +28,12 @@ export const createUserSchema = object({
 
 //Typescript type from body of Zod object for easy type safety
 export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
+
+export const verifyUserSchema = object({
+  params: object({
+    id: string(),
+    verificationCode: string(),
+  }),
+});
+
+export type VerifyUserInput = TypeOf<typeof verifyUserSchema>["params"];
