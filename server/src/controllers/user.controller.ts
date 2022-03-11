@@ -3,9 +3,10 @@ import { CreateUserInput } from "../schema/user.schema";
 import { createUser } from "../services/user.service";
 import sendEmail from "../utils/mailer";
 
+//last layer that interacts with the client, after all checking is done calls the service that interacts with DB
+//handles emailing for user verification code if successfully saved
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
   const body = req.body;
-
   try {
     const user = await createUser(body);
     const testMail = {

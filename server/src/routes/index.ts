@@ -4,8 +4,7 @@ import authRoutes from "./auth.routes";
 
 const router = express.Router();
 
-router.get("/hello", (req, res) => res.json("Hello"));
-
+//connecting individual sets of routes
 router.use(userRoutes);
 router.use(authRoutes);
 

@@ -1,5 +1,8 @@
 import { object, string, TypeOf } from "zod";
 
+//Schema here is for checking that the incoming request data will match with the model that will interact with the DB
+//also other misc checks like password+passwordConfirmation matching(which are not saved to DB), etc.
+
 export const createUserSchema = object({
   body: object({
     firstName: string({
@@ -23,4 +26,5 @@ export const createUserSchema = object({
   }),
 });
 
+//Typescript type from body of Zod object for easy type safety
 export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
