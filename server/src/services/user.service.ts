@@ -9,3 +9,7 @@ export function createUser(input: Partial<User>) {
 export function findUserById(id: string) {
   return UserModel.findById(id);
 }
+
+export function findUserByEmail(email: string) {
+  return UserModel.findOne({ email });
+}
