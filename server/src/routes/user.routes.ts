@@ -2,10 +2,16 @@ import express from "express";
 import {
   createUserHandler,
   forgotPasswordHandler,
+  resetPasswordHandler,
   verifyUserHandler,
 } from "../controllers/user.controller";
 import validateResource from "../middleware/validateResource";
-import { createUserSchema, forgotPasswordSchema, verifyUserSchema } from "../schema/user.schema";
+import {
+  createUserSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  verifyUserSchema,
+} from "../schema/user.schema";
 
 const router = express.Router();
 
@@ -16,5 +22,10 @@ router.post(
   verifyUserHandler
 );
 router.post("api/users/forgotpassword", validateResource(forgotPasswordSchema), forgotPasswordHandler);
+router.post(
+  "api/users/resetpassword/:id/:passwordResetCode",
+  validateResource(resetPasswordSchema),
+  resetPasswordHandler
+);
 
 export default router;

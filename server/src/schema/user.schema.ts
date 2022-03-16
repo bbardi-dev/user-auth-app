@@ -47,3 +47,23 @@ export const forgotPasswordSchema = object({
 });
 
 export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>["body"];
+
+export const resetPasswordSchema = object({
+  params: object({
+    id: string(),
+    passwordResetCode: string(),
+  }),
+  body: object({
+    password: string({
+      required_error: "Password required",
+    }).min(6, "Password should be a minimum of 6 characters"),
+    passwordConfirmation: string({
+      required_error: "Password confirmation required",
+    }),
+  }).refine((data) => data.password === data.passwordConfirmation, {
+    message: "Password do not match",
+    path: ["passwordConfirmation"],
+  }),
+});
+
+export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
