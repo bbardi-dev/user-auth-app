@@ -79,6 +79,8 @@ export class User {
   }
 }
 
+export const privateFields = ["password", "verificationCode", "__v", "passwordResetCode", "verified"];
+
 //Creates Mongoose model with all the methods for interacting the Database itself
 const UserModel = getModelForClass(User);
 

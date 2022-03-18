@@ -1,9 +1,11 @@
 //Used for handling all authentication logic/strategy, eg. Github Oauth, etc.
 
 import { NextFunction, Request, Response } from "express";
+import { get } from "lodash";
 import { CreateSessionInput } from "../schema/auth.schema";
-import { signAccessToken, signRefreshToken } from "../services/auth.service";
-import { findUserByEmail } from "../services/user.service";
+import { findSessionById, signAccessToken, signRefreshToken } from "../services/auth.service";
+import { findUserByEmail, findUserById } from "../services/user.service";
+import { verifyJwt } from "../utils/jwt";
 
 export async function createSessionHandler(
   req: Request<{}, {}, CreateSessionInput>,
@@ -39,4 +41,26 @@ export async function createSessionHandler(
     accessToken,
     refreshToken,
   });
+}
+
+export async function refreshTokenHandler(req: Request, res: Response) {
+  const refreshToken = get(req, "headers.x-refresh");
+
+  const decoded = verifyJwt<{ session: string }>(refreshToken, "refreshTokenPublicKey");
+
+  const rejected = res.status(401).send("Could not refresh access token");
+
+  if (!decoded) return rejected;
+
+  const session = await findSessionById(decoded.session);
+
+  if (!session || !session.valid) return rejected;
+
+  const user = await findUserById(String(session.user));
+
+  if (!user) return rejected;
+
+  const accessToken = signAccessToken(user);
+
+  return res.send({ accessToken });
 }
