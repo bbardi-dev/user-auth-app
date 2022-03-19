@@ -20,7 +20,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
       from: "test@test.com",
       to: user.email,
       subject: "Verify your email",
-      text: `Your verification code is: ${user.verificationCode}`,
+      text: `Your verification code is: ${user.verificationCode}, user id is ${user._id}`,
     };
 
     await sendEmail(testMail);

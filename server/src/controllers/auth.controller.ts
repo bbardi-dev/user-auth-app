@@ -34,7 +34,25 @@ export async function createSessionHandler(
   const accessToken = signAccessToken(user);
 
   //sign refresh token
-  const refreshToken = signRefreshToken(user.id);
+  const refreshToken = await signRefreshToken(user.id);
+
+  //set cookies
+  res.cookie("accessToken", accessToken, {
+    maxAge: 1000 * 60 * 30, // set to 30m
+    httpOnly: true,
+    //domain: ,
+    //path: "/",
+    //sameSite: strict,
+    //secure:  // is it in production ? true : false
+  });
+  res.cookie("refreshToken", refreshToken, {
+    maxAge: 1000 * 60 * 60 * 24 * 30, //set to 30d
+    httpOnly: true,
+    //domain: ,
+    //path: "/",
+    //sameSite: strict,
+    //secure:  // is it in production ? true : false
+  });
 
   //send tokens to client
   return res.send({
@@ -44,7 +62,7 @@ export async function createSessionHandler(
 }
 
 export async function refreshTokenHandler(req: Request, res: Response) {
-  const refreshToken = get(req, "headers.x-refresh");
+  const refreshToken = get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
 
   const decoded = verifyJwt<{ session: string }>(refreshToken, "refreshTokenPublicKey");
 
@@ -61,6 +79,15 @@ export async function refreshTokenHandler(req: Request, res: Response) {
   if (!user) return rejected;
 
   const accessToken = signAccessToken(user);
+
+  res.cookie("accessToken", accessToken, {
+    maxAge: 1000 * 60 * 30, // set to 30m
+    httpOnly: true,
+    //domain: ,
+    //path: "/",
+    //sameSite: strict,
+    //secure:  // is it in production ? true : false
+  });
 
   return res.send({ accessToken });
 }
