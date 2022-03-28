@@ -25,6 +25,6 @@ Clean and scalabe backend REST API + basic user authentication architecture, usa
 
 WORK IN PROGRESS
 
-###
+### -
 
 Credit goes to TomDoesTech on youtube for the original idea, architecture, etc.
