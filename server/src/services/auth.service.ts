@@ -7,6 +7,9 @@ import { signJwt } from "../utils/jwt";
 export async function createSession(userId: string) {
   return SessionModel.create({ user: userId });
 }
+export async function deleteSession(userId: string) {
+  return SessionModel.deleteOne({ user: userId });
+}
 export async function findSessionById(sessionId: string) {
   return SessionModel.findById(sessionId);
 }

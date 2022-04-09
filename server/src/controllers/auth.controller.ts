@@ -2,8 +2,13 @@
 
 import { NextFunction, Request, Response } from "express";
 import { get } from "lodash";
-import { CreateSessionInput } from "../schema/auth.schema";
-import { findSessionById, signAccessToken, signRefreshToken } from "../services/auth.service";
+import { CreateSessionInput, DeleteSessionInput } from "../schema/auth.schema";
+import {
+  deleteSession,
+  findSessionById,
+  signAccessToken,
+  signRefreshToken,
+} from "../services/auth.service";
 import { findUserByEmail, findUserById } from "../services/user.service";
 import { verifyJwt } from "../utils/jwt";
 
@@ -37,21 +42,22 @@ export async function createSessionHandler(
   const refreshToken = await signRefreshToken(user.id);
 
   //set cookies
+  //TODO change these for production
   res.cookie("accessToken", accessToken, {
     maxAge: 1000 * 60 * 30, // set to 30m
     httpOnly: true,
-    //domain: ,
-    //path: "/",
-    //sameSite: strict,
-    //secure:  // is it in production ? true : false
+    // domain: "localhost",
+    // path: "/",
+    sameSite: "lax",
+    secure: false, // is it in production ? true : false
   });
   res.cookie("refreshToken", refreshToken, {
     maxAge: 1000 * 60 * 60 * 24 * 30, //set to 30d
     httpOnly: true,
-    //domain: ,
-    //path: "/",
-    //sameSite: strict,
-    //secure:  // is it in production ? true : false
+    // domain: "localhost",
+    // path: "/",
+    sameSite: "lax",
+    secure: false, // is it in production ? true : false
   });
 
   //send tokens to client
@@ -59,6 +65,31 @@ export async function createSessionHandler(
     accessToken,
     refreshToken,
   });
+}
+
+export async function deleteSessionHandler(
+  req: Request<{}, {}, DeleteSessionInput>,
+  res: Response,
+  next: NextFunction
+) {
+  console.log("I was fired");
+
+  const { email } = req.body;
+  const user = await findUserByEmail(email);
+  console.log(user);
+  const message = "User not found";
+
+  if (!user) {
+    return res.send(message);
+  }
+
+  await deleteSession(user.id);
+
+  return res
+    .clearCookie("refreshToken")
+    .clearCookie("accessToken")
+    .status(204)
+    .send("User successfully logged out");
 }
 
 export async function refreshTokenHandler(req: Request, res: Response) {

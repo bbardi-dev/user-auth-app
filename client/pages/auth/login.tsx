@@ -39,7 +39,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       console.log(data);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/auth`, data, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/auth/login`, data, {
         withCredentials: true,
       });
       console.log(response);

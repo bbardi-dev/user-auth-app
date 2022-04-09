@@ -1,12 +1,16 @@
 import express from "express";
-import { createSessionHandler, refreshTokenHandler } from "../controllers/auth.controller";
+import {
+  createSessionHandler,
+  deleteSessionHandler,
+  refreshTokenHandler,
+} from "../controllers/auth.controller";
 import validateResource from "../middleware/validateResource";
-import { createSessionSchema } from "../schema/auth.schema";
+import { createSessionSchema, deleteSessionSchema } from "../schema/auth.schema";
 
 const router = express.Router();
 
-router.post("/api/auth", validateResource(createSessionSchema), createSessionHandler);
-
+router.post("/api/auth/login", validateResource(createSessionSchema), createSessionHandler);
+router.post("/api/auth/logout", validateResource(deleteSessionSchema), deleteSessionHandler);
 router.post("/api/auth/refresh", refreshTokenHandler);
 
 export default router;

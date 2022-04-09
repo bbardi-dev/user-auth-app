@@ -12,3 +12,13 @@ export const createSessionSchema = object({
 });
 
 export type CreateSessionInput = TypeOf<typeof createSessionSchema>["body"];
+
+export const deleteSessionSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email required",
+    }).email("Invalid user"),
+  }),
+});
+
+export type DeleteSessionInput = TypeOf<typeof deleteSessionSchema>["body"];
