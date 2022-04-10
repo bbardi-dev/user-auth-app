@@ -1,16 +1,9 @@
 //Used for handling all authentication logic/strategy, eg. Github Oauth, etc.
 
 import { NextFunction, Request, Response } from "express";
-import { get } from "lodash";
 import { CreateSessionInput, DeleteSessionInput } from "../schema/auth.schema";
-import {
-  deleteSession,
-  findSessionById,
-  signAccessToken,
-  signRefreshToken,
-} from "../services/auth.service";
-import { findUserByEmail, findUserById } from "../services/user.service";
-import { verifyJwt } from "../utils/jwt";
+import { signAccessToken, signRefreshToken, updateSession } from "../services/auth.service";
+import { findUserByEmail } from "../services/user.service";
 
 export async function createSessionHandler(
   req: Request<{}, {}, CreateSessionInput>,
@@ -44,7 +37,7 @@ export async function createSessionHandler(
   //set cookies
   //TODO change these for production
   res.cookie("accessToken", accessToken, {
-    maxAge: 1000 * 60 * 30, // set to 30m
+    maxAge: 1000 * 60 * 0.5, //TODO set to 30m
     httpOnly: true,
     // domain: "localhost",
     // path: "/",
@@ -72,53 +65,13 @@ export async function deleteSessionHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.log("I was fired");
+  const sessionId = res.locals.user.session;
 
-  const { email } = req.body;
-  const user = await findUserByEmail(email);
-  console.log(user);
-  const message = "User not found";
-
-  if (!user) {
-    return res.send(message);
-  }
-
-  await deleteSession(user.id);
+  await updateSession({ _id: sessionId }, { valid: false });
 
   return res
     .clearCookie("refreshToken")
     .clearCookie("accessToken")
     .status(204)
     .send("User successfully logged out");
-}
-
-export async function refreshTokenHandler(req: Request, res: Response) {
-  const refreshToken = get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
-
-  const decoded = verifyJwt<{ session: string }>(refreshToken, "refreshTokenPublicKey");
-
-  const rejected = res.status(401).send("Could not refresh access token");
-
-  if (!decoded) return rejected;
-
-  const session = await findSessionById(decoded.session);
-
-  if (!session || !session.valid) return rejected;
-
-  const user = await findUserById(String(session.user));
-
-  if (!user) return rejected;
-
-  const accessToken = signAccessToken(user);
-
-  res.cookie("accessToken", accessToken, {
-    maxAge: 1000 * 60 * 30, // set to 30m
-    httpOnly: true,
-    //domain: ,
-    //path: "/",
-    //sameSite: strict,
-    //secure:  // is it in production ? true : false
-  });
-
-  return res.send({ accessToken });
 }

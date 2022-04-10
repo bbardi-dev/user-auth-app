@@ -1,4 +1,5 @@
 import { DocumentType } from "@typegoose/typegoose";
+import { FilterQuery, UpdateQuery } from "mongoose";
 import { omit } from "lodash";
 import { SessionModel } from "../models/auth.model";
 import { privateFields, User } from "../models/user.model";
@@ -7,8 +8,11 @@ import { signJwt } from "../utils/jwt";
 export async function createSession(userId: string) {
   return SessionModel.create({ user: userId });
 }
-export async function deleteSession(userId: string) {
-  return SessionModel.deleteOne({ user: userId });
+export async function updateSession(
+  query: FilterQuery<typeof SessionModel>,
+  update: UpdateQuery<typeof SessionModel>
+) {
+  return SessionModel.updateOne(query, update);
 }
 export async function findSessionById(sessionId: string) {
   return SessionModel.findById(sessionId);
