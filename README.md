@@ -1,4 +1,4 @@
-# User authentication API with minimal frontend
+# Backend-only user authentication API
 
 WORK IN PROGRESS
 
@@ -15,8 +15,6 @@ Deployed at:
 
 ## Tech Stack
 
-**Client:** Typescript, React, Next.js
-
 **Server**: Typescript, Node.js, Express.js, REST API, MongoDB, Mongoose, JWT, Nodemailer, Zod
 
 ## Lessons Learned
@@ -27,4 +25,4 @@ WORK IN PROGRESS
 
 ### -
 
-Credit goes to TomDoesTech on youtube for the original idea, architecture, etc.
+Credit goes to TomDoesTech on youtube for the original idea & architecture.
