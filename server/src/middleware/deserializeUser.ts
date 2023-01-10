@@ -10,8 +10,6 @@ export default async function deserializeUser(req: Request, res: Response, next:
 
   const refreshToken = get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
 
-  console.log("accss:", accessToken, "rfrsh:", refreshToken);
-
   if (!refreshToken) return next();
 
   if (!accessToken) {
@@ -24,7 +22,6 @@ export default async function deserializeUser(req: Request, res: Response, next:
       //sameSite: strict,
       //secure:  // is it in production ? true : false
     });
-    console.log("fireed heree");
     if (!newAccessToken) {
       return next();
     }
@@ -47,8 +44,6 @@ export default async function deserializeUser(req: Request, res: Response, next:
 
 export async function refreshTokenHandler(refreshToken: string) {
   const decoded = verifyJwt<{ session: string }>(refreshToken, "refreshTokenPublicKey");
-
-  //   const rejected = res.status(401).send("Could not refresh access token");
 
   if (!decoded) return null;
 

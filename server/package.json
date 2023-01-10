@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "test": "jest"
+    "test": "jest",
+    "testW": "jest --watch",
+    "testD": "jest --detectOpenHandles"
   },
   "author": "BBardi",
   "license": "ISC",

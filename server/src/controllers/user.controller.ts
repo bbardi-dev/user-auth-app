@@ -24,8 +24,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
     };
 
     await sendEmail(testMail);
-
-    res.send("User successfully created");
+    res.send({ body: body, message: "User created successfully!" });
   } catch (e: any) {
     if (e.code === 11000) return res.status(409).send("Account already exists");
 

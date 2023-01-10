@@ -8,8 +8,8 @@ export default {
   refreshTokenPrivateKey: `${process.env.REFRESH_TOKEN_PRIVATE_KEY}`,
   refreshTokenPublicKey: `${process.env.REFRESH_TOKEN_PUBLIC_KEY}`,
   smtp: {
-    user: "edmund.okon@ethereal.email",
-    pass: "CZ5XnV81FH3Hz11nNW",
+    user: "xtvxdb2itsmuxben@ethereal.email",
+    pass: "sBaqt932k9F8p3NyUj",
     host: "smtp.ethereal.email",
     port: 587,
     secure: false,

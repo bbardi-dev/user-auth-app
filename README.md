@@ -1,12 +1,11 @@
 # Backend-only user authentication API
 
-WORK IN PROGRESS
+Simple Backend-only REST API for basic user authentication flow.
 
 ## Demo
 
-Deployed at:
-
-![Demo]()
+![Demo](user-flow.png)
+![Demo](auth-flow.png)
 
 ## Features
 
