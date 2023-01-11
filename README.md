@@ -14,13 +14,11 @@ Simple Backend-only REST API for basic user authentication flow.
 
 ## Tech Stack
 
-**Server**: Typescript, Node.js, Express.js, REST API, MongoDB, Mongoose, JWT, Nodemailer, Zod
+- Typescript, Node.js, Express.js, REST API, MongoDB, Mongoose, JWT, Nodemailer, Zod
 
 ## Lessons Learned
 
-Clean and scalabe backend REST API + basic user authentication architecture, usage of JSON webtokens, express middlewares, input validation with Zod, MongoDB with Mongoose...
-
-WORK IN PROGRESS
+Clean and scalabe backend REST API + basic user authentication architecture, usage of JSON webtokens and server sessions, Express.js middlewares, input validation with Zod, MongoDB with Mongoose.
 
 ### -
 
